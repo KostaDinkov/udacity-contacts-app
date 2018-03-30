@@ -3,38 +3,38 @@ import PropTypes from 'prop-types'
 
 const readFileAsDataURL = (file) =>
   new Promise(resolve => {
-    const reader = new FileReader()
+    const reader = new FileReader();
 
     reader.onload = (event) => {
       resolve(event.target.result)
-    }
+    };
 
     reader.readAsDataURL(file)
-  })
+  });
 
 const resizeImage = (imageURL, canvas, maxHeight) =>
   new Promise(resolve => {
-    const image = new Image()
+    const image = new Image();
 
     image.onload = () => {
-      const context = canvas.getContext('2d')
+      const context = canvas.getContext('2d');
 
       if (image.height > maxHeight) {
-        image.width *= maxHeight / image.height
+        image.width *= maxHeight / image.height;
         image.height = maxHeight
       }
 
-      context.clearRect(0, 0, canvas.width, canvas.height)
-      canvas.width = image.width
-      canvas.height = image.height
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.width = image.width;
+      canvas.height = image.height;
 
-      context.drawImage(image, 0, 0, image.width, image.height)
+      context.drawImage(image, 0, 0, image.width, image.height);
 
       resolve(canvas.toDataURL('image/jpeg'))
-    }
+    };
 
     image.src = imageURL
-  })
+  });
 
 /**
  * A custom <input> that dynamically reads and resizes image files before
@@ -45,14 +45,14 @@ class ImageInput extends React.Component {
     className: PropTypes.string,
     name: PropTypes.string,
     maxHeight: PropTypes.number
-  }
+  };
 
   state = {
     value: ''
-  }
+  };
 
   handleFileChange = (event) => {
-    const file = event.target.files[0]
+    const file = event.target.files[0];
 
     if (file && file.type.match(/^image\//)) {
       readFileAsDataURL(file).then(originalURL => {
@@ -63,14 +63,14 @@ class ImageInput extends React.Component {
     } else {
       this.setState({ value: '' })
     }
-  }
+  };
 
   handleFormReset = () => {
     this.setState({ value: '' })
-  }
+  };
 
   componentDidMount() {
-    this.canvas = document.createElement('canvas')
+    this.canvas = document.createElement('canvas');
     this.fileInput.form.addEventListener('reset', this.handleFormReset)
   }
 
@@ -79,17 +79,17 @@ class ImageInput extends React.Component {
   }
 
   render() {
-    const { className, name } = this.props
-    const { value } = this.state
+    const { className, name } = this.props;
+    const { value } = this.state;
 
     const style = {
       position: 'relative'
-    }
+    };
 
     if (value) {
-      style.backgroundImage = `url("${value}")`
-      style.backgroundRepeat = 'no-repeat'
-      style.backgroundPosition = 'center'
+      style.backgroundImage = `url("${value}")`;
+      style.backgroundRepeat = 'no-repeat';
+      style.backgroundPosition = 'center';
       style.backgroundSize = 'cover'
     }
 
